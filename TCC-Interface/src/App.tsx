@@ -1,5 +1,5 @@
 import { Auth } from './pages/Auth';
-import { SignIn } from './pages/SignIn';
+import { Login } from './pages/Login';
 import './styles/global.scss';
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 
@@ -7,7 +7,7 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<SignIn />} />
+        <Route path="/" element={<Login />} />
         <Route path="/logged" element={<Auth />} />
         <Route path="*" element={
           <main style={{ padding: "1rem" }}>
