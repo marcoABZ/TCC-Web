@@ -1,32 +1,45 @@
-import { GoogleLogo } from 'phosphor-react';
-import './signIn.scss';
-import { GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
-import { auth } from '../../services/firebase';
+import { auth } from "../../services/firebase";
+import { signInWithEmailAndPassword, signOut } from "firebase/auth";
+import { useState } from "react";
+import { useNavigate} from 'react-router-dom';
 
-export function SignIn() {
+export const SignIn = () => {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const navigate = useNavigate();
+    
+  console.log(auth?.currentUser?.email);
 
-    function handleGoogleSignIn() {
-        const provider = new GoogleAuthProvider();
+  const signIn = async () => {
+    signInWithEmailAndPassword(auth, email, password)
+    .then(() => {
+      navigate('/logged');
+    })
+    .catch((error) => {
+      const errorCode = error.code;
+      const errorMessage = error.message;
+      console.log(errorCode, errorMessage);
+    });
+  };
 
-        signInWithPopup(auth, provider)
-        .then((result) => {
-            console.log(result);
-        })
-        .catch((error) => {
-            console.log(error);
-        });
+  const logOut = async () => {
+    try {
+    await signOut(auth);
+    } catch (err){
+      console.error(err);
     }
+  };
 
-    return (
-        <>
-            <div className="container">
-                <h1>Acesse sua conta</h1>
-                
-                <button type="button" className="button" onClick={handleGoogleSignIn}>
-                    <GoogleLogo></GoogleLogo>
-                    Log-in com Google
-                </button>
-            </div>
-        </>
-    )
-}
+  return (
+    <div>
+      <input placeholder="Email" onChange={(e) => setEmail(e.target.value)} />
+      <input
+        type="password"
+        placeholder="Password"
+        onChange={(e) => setPassword(e.target.value)}
+      />
+      <button onClick={signIn}> Sign In</button>
+      <button onClick={logOut}> Log Out</button>
+    </div>
+  );
+};
